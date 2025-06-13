@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء حساب - LeenClasses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; }
+    body { background-color: #f5f7fa; }
+    .register-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    .register-left {
+      flex: 1;
+      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      color: white;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .register-left h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    .register-left ul {
+      margin: 30px 0;
+      list-style: none;
+    }
+    .register-left li {
+      margin: 15px 0;
+      padding-right: 30px;
+      position: relative;
+    }
+    .register-left li:before {
+      content: "\f00c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      right: 0;
+    }
+    .register-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .register-form {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    .register-form h2 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+    .register-btn {
+      width: 100%;
+      padding: 12px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .register-btn:hover {
+      background: #2980b9;
+    }
+    .register-links {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .register-links a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    .register-links a:hover {
+      text-decoration: underline;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo img {
+      height: 50px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .form-footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #666;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .register-container {
+        flex-direction: column;
+      }
+      .register-left {
+        padding: 30px 20px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="register-left">
+      <h1>انضم إلى LeenClasses اليوم</h1>
+      <p>ابدأ رحلتك في إدارة العملية التعليمية بكل سهولة واحترافية</p>
+      <ul>
+        <li>إدارة مركزك التعليمي من مكان واحد</li>
+        <li>متابعة أداء الطلاب والمدرسين</li>
+        <li>فصول افتراضية متكاملة</li>
+        <li>تقارير مالية وتحصيل متقدمة</li>
+      </ul>
+    </div>
+    <div class="register-right">
+      <div class="register-form">
+        <div class="logo">
+          <img src="images/logo.png" alt="LeenClasses">
+        </div>
+        <h2>إنشاء حساب جديد</h2>
+        <form>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>الاسم الأول</label>
+              <input type="text" placeholder="الاسم الأول" required>
+            </div>
+            <div class="form-group">
+              <label>اسم العائلة</label>
+              <input type="text" placeholder="اسم العائلة" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" placeholder="ادخل بريدك الإلكتروني" required>
+          </div>
+          <div class="form-group">
+            <label>رقم الهاتف</label>
+            <input type="tel" placeholder="ادخل رقم الهاتف" required>
+          </div>
+          <div class="form-group">
+            <label>نوع الحساب</label>
+            <select required>
+              <option value="">اختر نوع الحساب</option>
+              <option value="teacher">مدرس/مدرسة</option>
+              <option value="school">مدرسة/مركز تعليمي</option>
+              <option value="admin">مسؤول نظام</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <input type="password" placeholder="كلمة المرور (8 أحرف على الأقل)" minlength="8" required>
+          </div>
+          <div class="form-group">
+            <label>تأكيد كلمة المرور</label>
+            <input type="password" placeholder="أعد إدخال كلمة المرور" required>
+          </div>
+          <button type="submit" class="register-btn">إنشاء حساب</button>
+        </form>
+        <div class="form-footer">
+          <p>بالنقر على "إنشاء حساب" فإنك توافق على <a href="terms.html">شروط الخدمة</a> و<a href="privacy.html">سياسة الخصوصية</a></p>
+        </div>
+        <div class="register-links">
+          <p>لديك حساب بالفعل؟ <a href="login.html">سجل الدخول الآن</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الدعم الفني - LeenClasses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --sidebar-width: 250px;
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; }
+    body { background-color: #f5f7fa; }
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Sidebar Styles */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--primary-color);
+      color: white;
+      transition: all 0.3s;
+      position: fixed;
+      height: 100vh;
+      z-index: 1000;
+    }
+    .sidebar-header {
+      padding: 20px;
+      background: rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-header img {
+      height: 40px;
+    }
+    .sidebar-menu {
+      padding: 20px 0;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+    .sidebar-menu h3 {
+      padding: 10px 20px;
+      color: #bdc3c7;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    .sidebar-menu ul {
+      list-style: none;
+    }
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .sidebar-menu li a:hover, .sidebar-menu li a.active {
+      background: rgba(255,255,255,0.1);
+      border-right: 3px solid var(--secondary-color);
+    }
+    .sidebar-menu li a i {
+      margin-left: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    /* Main Content Styles */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-right: var(--sidebar-width);
+      transition: margin 0.3s;
+    }
+    /* Top Navbar */
+    .top-navbar {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .search-bar input {
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 300px;
+      font-size: 0.9rem;
+    }
+    .search-bar button {
+      background: none;
+      border: none;
+      margin-right: -30px;
+      color: #777;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .hamburger-menu {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    .user-menu .notification {
+      position: relative;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+    .user-menu .notification .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .user-menu .user-profile {
+      display: flex;
+      align-items: center;
+    }
+    .user-menu .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      background: #f5f7fa;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .page-header h2 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+    .support-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+    .support-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .support-option {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 25px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .support-option:hover {
+      background: #e9ecef;
+      transform: translateY(-5px);
+    }
+    .support-option i {
+      font-size: 2.5rem;
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+    }
+    .support-option h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+    .ticket-form {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .form-group textarea {
+      min-height: 150px;
+    }
+    .submit-btn {
+      padding: 12px 25px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .submit-btn:hover {
+      background: #2980b9;
+    }
+    .tickets-list {
+      margin-top: 30px;
+    }
+    .ticket-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .ticket-item:hover {
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .ticket-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .ticket-title {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .ticket-status {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .status-open {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-closed {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .ticket-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    .ticket-date {
+      margin-left: 15px;
+    }
+    .support-tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+    }
+    .support-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+    .support-tab.active {
+      border-bottom-color: var(--secondary-color);
+      font-weight: bold;
+    }
+    .settings-content {
+      display: none;
+    }
+    .settings-content.active {
+      display: block;
+    }
+    .btn-add-new {
+      padding: 10px 15px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    /* FAQ Styles */
+    .faq-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .faq-item > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-item h5 {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .faq-answer {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+    .faq-answer p {
+      margin-bottom: 10px;
+    }
+    .faq-answer ol, .faq-answer ul {
+      padding-right: 20px;
+      margin-top: 10px;
+    }
+    /* Responsive */
+    @media (max-width: 1199px) {
+      .search-bar input {
+        width: 250px;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 70px;
+        overflow: hidden;
+      }
+      .sidebar-header h3, .sidebar-menu h3, .sidebar-menu li a span {
+        display: none;
+      }
+      .sidebar-menu li a {
+        justify-content: center;
+        padding: 12px 10px;
+      }
+      .sidebar-menu li a i {
+        margin-left: 0;
+        font-size: 1.2rem;
+      }
+      .main-content {
+        margin-right: 70px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 250px;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-right: 0;
+      }
+      .hamburger-menu {
+        display: block;
+      }
+      .search-bar input {
+        width: 180px;
+      }
+      .support-options {
+        grid-template-columns: 1fr;
+      }
+      .user-menu .user-profile span {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .top-navbar {
+        padding: 10px 15px;
+      }
+      .search-bar input {
+        width: 150px;
+        padding: 8px 12px;
+      }
+      .support-tabs {
+        flex-direction: column;
+        border-bottom: none;
+      }
+      .support-tab {
+        border-bottom: none;
+        border-right: 3px solid transparent;
+      }
+      .support-tab.active {
+        border-bottom: none;
+        border-right-color: var(--secondary-color);
+      }
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .search-bar input {
+        width: 120px;
+      }
+      .user-menu .notification {
+        margin-left: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <img src="images/logo-white.png" alt="LeenClasses">
+        <h3>LeenClasses</h3>
+      </div>
+      <div class="sidebar-menu">
+        <h3>القائمة الرئيسية</h3>
+        <ul>
+          <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>الرئيسية</span></a></li>
+          <li><a href="students.html"><i class="fas fa-users"></i> <span>الطلاب</span></a></li>
+          <li><a href="teachers.html"><i class="fas fa-chalkboard-teacher"></i> <span>المدرسين</span></a></li>
+          <li><a href="classes.html"><i class="fas fa-book-open"></i> <span>الفصول</span></a></li>
+          <li><a href="schedule.html"><i class="fas fa-calendar-alt"></i> <span>الجدول</span></a></li>
+          <li><a href="reports.html"><i class="fas fa-chart-bar"></i> <span>التقارير</span></a></li>
+          <li><a href="finance.html"><i class="fas fa-money-bill-wave"></i> <span>المالية</span></a></li>
+        </ul>
+        <h3>الإعدادات</h3>
+        <ul>
+          <li><a href="settings.html"><i class="fas fa-cog"></i> <span>الإعدادات</span></a></li>
+          <li><a href="support.html" class="active"><i class="fas fa-headset"></i> <span>الدعم الفني</span></a></li>
+          <li><a href="index.html"><i class="fas fa-globe"></i> <span>الموقع الرئيسي</span></a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Top Navbar -->
+      <div class="top-navbar">
+        <div style="display: flex; align-items: center;">
+          <button class="hamburger-menu" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="search-bar">
+            <input type="text" placeholder="ابحث هنا...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+          </div>
+        </div>
+        <div class="user-menu">
+          <div class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </div>
+          <div class="user-profile">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+            <span>أحمد محمد</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h2>الدعم الفني</h2>
+          <div>
+            <button class="btn-add-new">
+              <i class="fas fa-plus"></i> تذكرة جديدة
+            </button>
+          </div>
+        </div>
+        
+        <div class="support-container">
+          <div class="support-tabs">
+            <div class="support-tab active" data-tab="contact">اتصل بنا</div>
+            <div class="support-tab" data-tab="tickets">تذاكر الدعم</div>
+            <div class="support-tab" data-tab="faq">الأسئلة الشائعة</div>
+          </div>
+          
+          <!-- Contact Tab -->
+          <div class="settings-content active" id="contact-settings">
+            <h3>كيف يمكننا مساعدتك؟</h3>
+            <p style="margin-bottom: 30px;">لديك سؤال أو تحتاج إلى مساعدة؟ اختر أحد الخيارات أدناه للتواصل مع فريق الدعم لدينا.</p>
+            
+            <div class="support-options">
+              <div class="support-option">
+                <i class="fas fa-phone-alt"></i>
+                <h3>الدعم الهاتفي</h3>
+                <p>اتصل بنا على الرقم التالي للدعم الفوري</p>
+                <p style="font-weight: bold; margin-top: 10px;">01234567890</p>
+                <p style="font-size: 0.9rem; color: #777;">من الأحد إلى الخميس، 9 صباحًا - 5 مساءً</p>
+              </div>
+              
+              <div class="support-option">
+                <i class="fas fa-envelope"></i>
+                <h3>البريد الإلكتروني</h3>
+                <p>أرسل استفسارك عبر البريد الإلكتروني وسنرد عليك خلال 24 ساعة</p>
+                <p style="font-weight: bold; margin-top: 10px;">support@leenclasses.com</p>
+              </div>
+              
+              <div class="support-option">
+                <i class="fas fa-comment-dots"></i>
+                <h3>الدردشة المباشرة</h3>
+                <p>تواصل مع ممثل الدعم عبر الدردشة المباشرة للحصول على مساعدة فورية</p>
+                <button style="margin-top: 15px; padding: 8px 15px; background: var(--secondary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                  بدء الدردشة
+                </button>
+              </div>
+            </div>
+            
+            <div class="ticket-form">
+              <h3 style="margin-bottom: 20px;">إرسال تذكرة دعم</h3>
+              <form>
+                <div class="form-group">
+                  <label>نوع المشكلة</label>
+                  <select>
+                    <option>اختر نوع المشكلة</option>
+                    <option>مشكلة تقنية</option>
+                    <option>استفسار حول الميزات</option>
+                    <option>مشكلة في الدفع</option>
+                    <option>اقتراح تحسين</option>
+                    <option>أخرى</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label>عنوان التذكرة</label>
+                  <input type="text" placeholder="ادخل عنوانًا وصفياً للمشكلة">
+                </div>
+                
+                <div class="form-group">
+                  <label>وصف المشكلة</label>
+                  <textarea placeholder="صف مشكلتك بالتفصيل..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label>رفع ملفات (اختياري)</label>
+                  <input type="file">
+                  <p style="font-size: 0.8rem; color: #777;">يمكنك رفع لقطات الشاشة أو ملفات توضيحية</p>
+                </div>
+                
+                <button type="submit" class="submit-btn">إرسال التذكرة</button>
+              </form>
+            </div>
+          </div>
+          
+          <!-- Tickets Tab -->
+          <div class="settings-content" id="tickets-settings">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3>تذاكر الدعم السابقة</h3>
+              <button class="btn-add-new">
+                <i class="fas fa-plus"></i> تذكرة جديدة
+              </button>
+            </div>
+            
+            <div class="tickets-list">
+              <div class="ticket-item">
+                <div class="ticket-header">
+                  <div class="ticket-title">مشكلة في تسجيل الدخول إلى لوحة التحكم</div>
+                  <div class="ticket-status status-open">مفتوحة</div>
+                </div>
+                <p style="margin-bottom: 10px;">لا يمكنني تسجيل الدخول إلى لوحة التحكم رغم إدخال البيانات الصحيحة، تظهر لي رسالة خطأ غير واضحة.</p>
+                <div class="ticket-meta">
+                  <span>#TKT-2023-001</span>
+                  <span class="ticket-date">تم الإنشاء: 2023-03-15</span>
+                </div>
+              </div>
+              
+              <div class="ticket-item">
+                <div class="ticket-header">
+                  <div class="ticket-title">استفسار حول تقارير الحضور</div>
+                  <div class="ticket-status status-pending">قيد المراجعة</div>
+                </div>
+                <p style="margin-bottom: 10px;">أريد معرفة كيفية تصدير تقارير الحضور لجميع الطلاب في فصل معين.</p>
+                <div class="ticket-meta">
+                  <span>#TKT-2022023-002</span>
+                  <span class="ticket-date">تم الإنشاء: 2023-03-10</span>
+                </div>
+              </div>
+              
+              <div class="ticket-item">
+                <div class="ticket-header">
+                  <div class="ticket-title">مشكلة في تحديث البيانات الشخصية</div>
+                  <div class="ticket-status status-closed">مغلقة</div>
+                </div>
+                <p style="margin-bottom: 10px;">لا يمكنني تحديث بياناتي الشخصية في صفحة الملف الشخصي، تظهر رسالة خطأ عند المحاولة.</p>
+                <div class="ticket-meta">
+                  <span>#TKT-2023-003</span>
+                  <span class="ticket-date">تم الإنشاء: 2023-03-05 | تم الإغلاق: 2023-03-07</span>
+                </div>
+              </div>
+              
+              <div class="ticket-item">
+                <div class="ticket-header">
+                  <div class="ticket-title">طلب ميزة جديدة</div>
+                  <div class="ticket-status status-closed">مغلقة</div>
+                </div>
+                <p style="margin-bottom: 10px;">أقترح إضافة ميزة تصدير الجداول الزمنية بصيغة PDF مع إمكانية تخصيص التنسيق.</p>
+                <div class="ticket-meta">
+                  <span>#TKT-2023-004</span>
+                  <span class="ticket-date">تم الإنشاء: 2023-02-28 | تم الإغلاق: 2023-03-02</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- FAQ Tab -->
+          <div class="settings-content" id="faq-settings">
+            <h3 style="margin-bottom: 20px;">الأسئلة الشائعة</h3>
+            
+            <div style="margin-bottom: 30px;">
+              <h4 style="color: var(--primary-color); margin-bottom: 15px;">عام</h4>
+              <div class="faq-item">
+                <div>
+                  <h5>كيف يمكنني تحديث بياناتي الشخصية؟</h5>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>يمكنك تحديث بياناتك الشخصية من خلال الذهاب إلى صفحة الإعدادات > الملف الشخصي. هناك يمكنك تعديل المعلومات المطلوبة ثم الضغط على زر "حفظ التغييرات".</p>
+                </div>
+              </div>
+              
+              <div class="faq-item">
+                <div>
+                  <h5>كيف يمكنني إضافة طالب جديد؟</h5>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>لإضافة طالب جديد، اتبع الخطوات التالية:</p>
+                  <ol>
+                    <li>انتقل إلى قسم "الطلاب" من القائمة الرئيسية</li>
+                    <li>اضغط على زر "إضافة طالب جديد"</li>
+                    <li>املأ النموذج بالمعلومات المطلوبة</li>
+                    <li>اضغط على زر "حفظ"</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+              <h4 style="color: var(--primary-color); margin-bottom: 15px;">المشاكل التقنية</h4>
+              <div class="faq-item">
+                <div>
+                  <h5>ما الحل إذا نسيت كلمة المرور؟</h5>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>إذا نسيت كلمة المرور الخاصة بك:</p>
+                  <ol>
+                    <li>اضغط على "نسيت كلمة المرور" في صفحة تسجيل الدخول</li>
+                    <li>أدخل عنوان البريد الإلكتروني المسجل لدينا</li>
+                    <li>ستصلك رسالة تحتوي على رابط لإعادة تعيين كلمة المرور</li>
+                    <li>اتبع التعليمات في الرسالة لإنشاء كلمة مرور جديدة</li>
+                  </ol>
+                </div>
+              </div>
+              
+              <div class="faq-item">
+                <div>
+                  <h5>لماذا لا يمكنني تسجيل الدخول إلى حسابي؟</h5>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>هناك عدة أسباب قد تمنعك من تسجيل الدخول:</p>
+                  <ul>
+                    <li>كلمة المرور غير صحيحة - حاول إعادة إدخالها بحذر</li>
+                    <li>الحساب غير مفعل - تحقق من بريدك الإلكتروني لتفعيل الحساب</li>
+                    <li>مشكلة في الاتصال بالإنترنت - تحقق من اتصالك بالشبكة</li>
+                    <li>مشكلة مؤقتة في الخادم - حاول مرة أخرى بعد قليل</li>
+                  </ul>
+                  <p style="margin-top: 10px;">إذا استمرت المشكلة، يرجى التواصل مع الدعم الفني.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 style="color: var(--primary-color); margin-bottom: 15px;">المدفوعات والاشتراكات</h4>
+              <div class="faq-item">
+                <div>
+                  <h5>كيف يمكنني دفع رسوم الفصل؟</h5>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>لدفع رسوم الفصل:</p>
+                  <ol>
+                    <li>انتقل إلى قسم "المالية" من القائمة الرئيسية</li>
+                    <li>اختر "الدفعات" من القائمة الفرعية</li>
+                    <li>اضغط على زر "دفع جديد"</li>
+                    <li>اختر الطالب والفصل المطلوب</li>
+                    <li>اختر طريقة الدفع وأكمل العملية</li>
+                  </ol>
+                </div>
+              </div>
+              
+              <div class="faq-item">
+                <div>
+                  <h5>كيف يمكنني الحصول على فاتورة للدفع؟</h5>
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                  <p>لحصول على فاتورة:</p>
+                  <ol>
+                    <li>انتقل إلى قسم "المالية"</li>
+                    <li>اختر "السجلات المالية"</li>
+                    <li>ابحث عن الدفع المطلوب</li>
+                    <li>اضغط على زر "طباعة الفاتورة" بجوار الدفع</li>
+                  </ol>
+                  <p style="margin-top: 10px;">سيتم إنشاء الفاتورة بصيغة PDF يمكنك حفظها أو طباعتها.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle sidebar on mobile
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      
+      if (window.innerWidth <= 768 && sidebar.classList.contains('active') && 
+          !sidebar.contains(event.target)) {
+        sidebar.classList.remove('active');
+      }
+    });
+    
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.support-tab');
+    const contents = document.querySelectorAll('.settings-content');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab and corresponding content
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab');
+        document.getElementById(`${tabId}-settings`).classList.add('active');
+      });
+    });
+    
+    // FAQ accordion functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('i');
+        
+        if (answer.style.display === 'block') {
+          answer.style.display = 'none';
+          icon.classList.remove('fa-chevron-up');
+          icon.classList.add('fa-chevron-down');
+        } else {
+          answer.style.display = 'block';
+          icon.classList.remove('fa-chevron-down');
+          icon.classList.add('fa-chevron-up');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

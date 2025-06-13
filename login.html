@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - LeenClasses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; }
+    body { background-color: #f5f7fa; }
+    .login-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    .login-left {
+      flex: 1;
+      background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      color: white;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .login-left h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    .login-left ul {
+      margin: 30px 0;
+      list-style: none;
+    }
+    .login-left li {
+      margin: 15px 0;
+      padding-right: 30px;
+      position: relative;
+    }
+    .login-left li:before {
+      content: "\f00c";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      right: 0;
+    }
+    .login-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .login-form {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 450px;
+    }
+    .login-form h2 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .form-group input:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .login-btn:hover {
+      background: #2980b9;
+    }
+    .login-links {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .login-links a {
+      color: #3498db;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .login-links a:hover {
+      text-decoration: underline;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .logo img {
+      height: 50px;
+    }
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+      }
+      .login-left {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-left">
+      <h1>مرحبًا بك في LeenClasses</h1>
+      <p>منصتك المتكاملة لإدارة العملية التعليمية بكل كفاءة واحترافية</p>
+      <ul>
+        <li>إدارة الفصول والطلاب بسهولة</li>
+        <li>نظام تقارير متكامل</li>
+        <li>فصول افتراضية متطورة</li>
+        <li>دعم فني على مدار الساعة</li>
+      </ul>
+    </div>
+    <div class="login-right">
+      <div class="login-form">
+        <div class="logo">
+          <img src="images/logo.png" alt="LeenClasses">
+        </div>
+        <h2>تسجيل الدخول إلى حسابك</h2>
+        <form>
+          <div class="form-group">
+            <label>البريد الإلكتروني</label>
+            <input type="email" placeholder="ادخل بريدك الإلكتروني" required>
+          </div>
+          <div class="form-group">
+            <label>كلمة المرور</label>
+            <input type="password" placeholder="ادخل كلمة المرور" required>
+          </div>
+          <button type="submit" class="login-btn">تسجيل الدخول</button>
+        </form>
+        <div class="login-links">
+          <a href="forgot-password.html">نسيت كلمة المرور؟</a>
+          <a href="register.html">إنشاء حساب جديد</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

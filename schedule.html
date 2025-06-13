@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الجدول الدراسي - LeenClasses</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --sidebar-width: 250px;
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #e74c3c;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Cairo", sans-serif; }
+    body { background-color: #f5f7fa; }
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    /* Sidebar Styles */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--primary-color);
+      color: white;
+      transition: all 0.3s;
+      position: fixed;
+      height: 100vh;
+      z-index: 1000;
+    }
+    .sidebar-header {
+      padding: 20px;
+      background: rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-header img {
+      height: 40px;
+    }
+    .sidebar-menu {
+      padding: 20px 0;
+      height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+    .sidebar-menu h3 {
+      padding: 10px 20px;
+      color: #bdc3c7;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    .sidebar-menu ul {
+      list-style: none;
+    }
+    .sidebar-menu li a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .sidebar-menu li a:hover, .sidebar-menu li a.active {
+      background: rgba(255,255,255,0.1);
+      border-right: 3px solid var(--secondary-color);
+    }
+    .sidebar-menu li a i {
+      margin-left: 10px;
+      width: 20px;
+      text-align: center;
+    }
+    /* Main Content Styles */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-right: var(--sidebar-width);
+      transition: margin 0.3s;
+    }
+    /* Top Navbar */
+    .top-navbar {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .search-bar input {
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 300px;
+      font-size: 0.9rem;
+    }
+    .search-bar button {
+      background: none;
+      border: none;
+      margin-right: -30px;
+      color: #777;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .hamburger-menu {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-left: 15px;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+    }
+    .user-menu .notification {
+      position: relative;
+      margin-left: 20px;
+      cursor: pointer;
+    }
+    .user-menu .notification .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .user-menu .user-profile {
+      display: flex;
+      align-items: center;
+    }
+    .user-menu .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-left: 10px;
+    }
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 20px;
+      background: #f5f7fa;
+    }
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .page-header h2 {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+    .btn-add-new {
+      padding: 10px 15px;
+      background: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    /* Schedule Styles */
+    .schedule-container {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+    .schedule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .schedule-nav {
+      display: flex;
+      align-items: center;
+    }
+    .schedule-nav h3 {
+      margin: 0 15px;
+      min-width: 150px;
+      text-align: center;
+      color: var(--primary-color);
+    }
+    .schedule-nav button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #555;
+      padding: 5px;
+    }
+    .schedule-view {
+      display: flex;
+    }
+    .schedule-view button {
+      padding: 8px 15px;
+      border: 1px solid #ddd;
+      background: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    .schedule-view button.active {
+      background: var(--secondary-color);
+      color: white;
+      border-color: var(--secondary-color);
+    }
+    .schedule-view button:first-child {
+      border-radius: 5px 0 0 5px;
+    }
+    .schedule-view button:last-child {
+      border-radius: 0 5px 5px 0;
+    }
+    .weekly-schedule {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .weekly-schedule th, .weekly-schedule td {
+      border: 1px solid #eee;
+      padding: 10px;
+      text-align: center;
+    }
+    .weekly-schedule th {
+      background: #f8f9fa;
+      color: #555;
+      font-weight: bold;
+    }
+    .time-slot {
+      font-weight: bold;
+      color: var(--primary-color);
+      background: #f8f9fa;
+    }
+    .schedule-class {
+      background: #e3f2fd;
+      border-radius: 5px;
+      padding: 8px;
+      margin: 5px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-left: 3px solid var(--secondary-color);
+    }
+    .schedule-class:hover {
+      background: #bbdefb;
+    }
+    .class-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: var(--primary-color);
+    }
+    .class-teacher {
+      font-size: 0.8rem;
+      color: #555;
+    }
+    .empty-slot {
+      color: #999;
+      font-size: 0.9rem;
+    }
+    
+    /* Filter Bar Styles */
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+    }
+    .filter-group label {
+      margin-left: 10px;
+      white-space: nowrap;
+    }
+    .filter-group select, .filter-group input {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 0.9rem;
+    }
+    
+    /* Hidden class for filtering */
+    .hidden {
+      display: none;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1199px) {
+      .search-bar input {
+        width: 250px;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .sidebar {
+        width: 70px;
+        overflow: hidden;
+      }
+      .sidebar-header h3, .sidebar-menu h3, .sidebar-menu li a span {
+        display: none;
+      }
+      .sidebar-menu li a {
+        justify-content: center;
+        padding: 12px 10px;
+      }
+      .sidebar-menu li a i {
+        margin-left: 0;
+        font-size: 1.2rem;
+      }
+      .main-content {
+        margin-right: 70px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 250px;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-right: 0;
+      }
+      .hamburger-menu {
+        display: block;
+      }
+      .search-bar input {
+        width: 180px;
+      }
+      .weekly-schedule {
+        display: block;
+        overflow-x: auto;
+      }
+      .user-menu .user-profile span {
+        display: none;
+      }
+      .filter-bar {
+        flex-direction: column;
+      }
+      .filter-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .top-navbar {
+        padding: 10px 15px;
+      }
+      .search-bar input {
+        width: 150px;
+        padding: 8px 12px;
+      }
+      .schedule-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .schedule-nav {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .schedule-view {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .search-bar input {
+        width: 120px;
+      }
+      .user-menu .notification {
+        margin-left: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <img src="images/logo-white.png" alt="LeenClasses">
+        <h3>LeenClasses</h3>
+      </div>
+      <div class="sidebar-menu">
+        <h3>القائمة الرئيسية</h3>
+        <ul>
+          <li><a href="dashboard.html"><i class="fas fa-home"></i> <span>الرئيسية</span></a></li>
+          <li><a href="students.html"><i class="fas fa-users"></i> <span>الطلاب</span></a></li>
+          <li><a href="teachers.html"><i class="fas fa-chalkboard-teacher"></i> <span>المدرسين</span></a></li>
+          <li><a href="classes.html"><i class="fas fa-book-open"></i> <span>الفصول</span></a></li>
+          <li><a href="schedule.html" class="active"><i class="fas fa-calendar-alt"></i> <span>الجدول</span></a></li>
+          <li><a href="reports.html"><i class="fas fa-chart-bar"></i> <span>التقارير</span></a></li>
+          <li><a href="finance.html"><i class="fas fa-money-bill-wave"></i> <span>المالية</span></a></li>
+        </ul>
+        <h3>الإعدادات</h3>
+        <ul>
+          <li><a href="settings.html"><i class="fas fa-cog"></i> <span>الإعدادات</span></a></li>
+          <li><a href="support.html"><i class="fas fa-headset"></i> <span>الدعم الفني</span></a></li>
+          <li><a href="index.html"><i class="fas fa-globe"></i> <span>الموقع الرئيسي</span></a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Top Navbar -->
+      <div class="top-navbar">
+        <div style="display: flex; align-items: center;">
+          <button class="hamburger-menu" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="search-bar">
+            <input type="text" placeholder="ابحث هنا...">
+            <button type="submit"><i class="fas fa-search"></i></button>
+          </div>
+        </div>
+        <div class="user-menu">
+          <div class="notification">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </div>
+          <div class="user-profile">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+            <span>أحمد محمد</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="page-header">
+          <h2>الجدول الدراسي</h2>
+          <button class="btn-add-new">
+            <i class="fas fa-plus"></i> إضافة حصة جديدة
+          </button>
+        </div>
+        
+        <!-- Schedule Container -->
+        <div class="schedule-container">
+          <div class="schedule-header">
+            <div class="schedule-nav">
+              <button><i class="fas fa-chevron-right"></i></button>
+              <h3>الأسبوع 12 - 18 مارس 2023</h3>
+              <button><i class="fas fa-chevron-left"></i></button>
+            </div>
+            <div class="schedule-view">
+              <button>اليوم</button>
+              <button class="active">الأسبوع</button>
+              <button>الشهر</button>
+            </div>
+          </div>
+          
+          <!-- Filter Bar -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>تصفية حسب:</label>
+              <select id="subjectFilter">
+                <option value="all">كل المواد</option>
+                <option value="math">الرياضيات</option>
+                <option value="physics">الفيزياء</option>
+                <option value="chemistry">الكيمياء</option>
+                <option value="arabic">اللغة العربية</option>
+                <option value="english">اللغة الإنجليزية</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>المدرس:</label>
+              <select id="teacherFilter">
+                <option value="all">كل المدرسين</option>
+                <option value="mohamed">أ. محمد عبدالله</option>
+                <option value="mahmoud">أ. محمود كمال</option>
+                <option value="khaled">أ. خالد وليد</option>
+                <option value="mona">أ. منى أحمد</option>
+                <option value="sara">أ. سارة أمير</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>اليوم:</label>
+              <select id="dayFilter">
+                <option value="all">كل الأيام</option>
+                <option value="saturday">السبت</option>
+                <option value="sunday">الأحد</option>
+                <option value="monday">الاثنين</option>
+                <option value="tuesday">الثلاثاء</option>
+                <option value="wednesday">الأربعاء</option>
+                <option value="thursday">الخميس</option>
+                <option value="friday">الجمعة</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>الوقت:</label>
+              <select id="timeFilter">
+                <option value="all">كل الأوقات</option>
+                <option value="morning">صباحاً (8:00 - 12:30)</option>
+                <option value="afternoon">بعد الظهر (2:00 - 5:00)</option>
+                <option value="evening">مساءً (5:00 - 8:00)</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Weekly Schedule -->
+          <table class="weekly-schedule" id="scheduleTable">
+            <thead>
+              <tr>
+                <th>الوقت</th>
+                <th data-day="saturday">السبت</th>
+                <th data-day="sunday">الأحد</th>
+                <th data-day="monday">الاثنين</th>
+                <th data-day="tuesday">الثلاثاء</th>
+                <th data-day="wednesday">الأربعاء</th>
+                <th data-day="thursday">الخميس</th>
+                <th data-day="friday">الجمعة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="time-slot" data-time="morning">8:00 - 9:30 ص</td>
+                <td data-day="saturday"></td>
+                <td data-day="sunday"></td>
+                <td data-day="monday"></td>
+                <td data-day="tuesday"></td>
+                <td data-day="wednesday"></td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="morning">9:30 - 11:00 ص</td>
+                <td data-day="saturday">
+                  <div class="schedule-class" data-subject="math" data-teacher="mohamed">
+                    <div class="class-title">الرياضيات</div>
+                    <div class="class-teacher">أ. محمد عبدالله</div>
+                  </div>
+                </td>
+                <td data-day="sunday"></td>
+                <td data-day="monday">
+                  <div class="schedule-class" data-subject="physics" data-teacher="mahmoud">
+                    <div class="class-title">الفيزياء</div>
+                    <div class="class-teacher">أ. محمود كمال</div>
+                  </div>
+                </td>
+                <td data-day="tuesday"></td>
+                <td data-day="wednesday">
+                  <div class="schedule-class" data-subject="math" data-teacher="mohamed">
+                    <div class="class-title">الرياضيات</div>
+                    <div class="class-teacher">أ. محمد عبدالله</div>
+                  </div>
+                </td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="morning">11:00 - 12:30 م</td>
+                <td data-day="saturday"></td>
+                <td data-day="sunday">
+                  <div class="schedule-class" data-subject="english" data-teacher="mona">
+                    <div class="class-title">اللغة الإنجليزية</div>
+                    <div class="class-teacher">أ. منى أحمد</div>
+                  </div>
+                </td>
+                <td data-day="monday"></td>
+                <td data-day="tuesday">
+                  <div class="schedule-class" data-subject="chemistry" data-teacher="khaled">
+                    <div class="class-title">الكيمياء</div>
+                    <div class="class-teacher">أ. خالد وليد</div>
+                  </div>
+                </td>
+                <td data-day="wednesday"></td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="afternoon">12:30 - 2:00 م</td>
+                <td data-day="saturday"></td>
+                <td data-day="sunday"></td>
+                <td data-day="monday"></td>
+                <td data-day="tuesday"></td>
+                <td data-day="wednesday"></td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="afternoon">2:00 - 3:30 م</td>
+                <td data-day="saturday">
+                  <div class="schedule-class" data-subject="arabic" data-teacher="sara">
+                    <div class="class-title">اللغة العربية</div>
+                    <div class="class-teacher">أ. سارة أمير</div>
+                  </div>
+                </td>
+                <td data-day="sunday"></td>
+                <td data-day="monday"></td>
+                <td data-day="tuesday"></td>
+                <td data-day="wednesday">
+                  <div class="schedule-class" data-subject="arabic" data-teacher="sara">
+                    <div class="class-title">اللغة العربية</div>
+                    <div class="class-teacher">أ. سارة أمير</div>
+                  </div>
+                </td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="afternoon">3:30 - 5:00 م</td>
+                <td data-day="saturday"></td>
+                <td data-day="sunday"></td>
+                <td data-day="monday"></td>
+                <td data-day="tuesday"></td>
+                <td data-day="wednesday"></td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="evening">5:00 - 6:30 م</td>
+                <td data-day="saturday">
+                  <div class="schedule-class" data-subject="math" data-teacher="mohamed">
+                    <div class="class-title">الرياضيات المتقدمة</div>
+                    <div class="class-teacher">أ. محمد عبدالله</div>
+                  </div>
+                </td>
+                <td data-day="sunday"></td>
+                <td data-day="monday">
+                  <div class="schedule-class" data-subject="math" data-teacher="mohamed">
+                    <div class="class-title">الرياضيات المتقدمة</div>
+                    <div class="class-teacher">أ. محمد عبدالله</div>
+                  </div>
+                </td>
+                <td data-day="tuesday"></td>
+                <td data-day="wednesday">
+                  <div class="schedule-class" data-subject="math" data-teacher="mohamed">
+                    <div class="class-title">الرياضيات المتقدمة</div>
+                    <div class="class-teacher">أ. محمد عبدالله</div>
+                  </div>
+                </td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+              <tr>
+                <td class="time-slot" data-time="evening">6:30 - 8:00 م</td>
+                <td data-day="saturday"></td>
+                <td data-day="sunday"></td>
+                <td data-day="monday"></td>
+                <td data-day="tuesday">
+                  <div class="schedule-class" data-subject="physics" data-teacher="mahmoud">
+                    <div class="class-title">الفيزياء</div>
+                    <div class="class-teacher">أ. محمود كمال</div>
+                  </div>
+                </td>
+                <td data-day="wednesday"></td>
+                <td data-day="thursday"></td>
+                <td data-day="friday"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle sidebar on mobile
+    document.getElementById('sidebarToggle').addEventListener('click', function() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+    
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      
+      if (window.innerWidth <= 768 && sidebar.classList.contains('active') && 
+          !sidebar.contains(event.target)) {
+        sidebar.classList.remove('active');
+      }
+    });
+
+    // Filter functionality for schedule
+    document.addEventListener('DOMContentLoaded', function() {
+      const subjectFilter = document.getElementById('subjectFilter');
+      const teacherFilter = document.getElementById('teacherFilter');
+      const dayFilter = document.getElementById('dayFilter');
+      const timeFilter = document.getElementById('timeFilter');
+      const scheduleTable = document.getElementById('scheduleTable');
+      
+      function filterSchedule() {
+        const subjectValue = subjectFilter.value;
+        const teacherValue = teacherFilter.value;
+        const dayValue = dayFilter.value;
+        const timeValue = timeFilter.value;
+        
+        // Get all schedule classes
+        const classes = scheduleTable.querySelectorAll('.schedule-class');
+        const timeSlots = scheduleTable.querySelectorAll('.time-slot');
+        const dayHeaders = scheduleTable.querySelectorAll('th[data-day]');
+        
+        // Filter classes
+        classes.forEach(cls => {
+          const clsSubject = cls.getAttribute('data-subject');
+          const clsTeacher = cls.getAttribute('data-teacher');
+          const clsDay = cls.closest('td').getAttribute('data-day');
+          const clsTime = cls.closest('tr').querySelector('.time-slot').getAttribute('data-time');
+          
+          // Apply filters
+          const subjectMatch = subjectValue === 'all' || clsSubject === subjectValue;
+          const teacherMatch = teacherValue === 'all' || clsTeacher === teacherValue;
+          const dayMatch = dayValue === 'all' || clsDay === dayValue;
+          const timeMatch = timeValue === 'all' || clsTime === timeValue;
+          
+          if (subjectMatch && teacherMatch && dayMatch && timeMatch) {
+            cls.classList.remove('hidden');
+          } else {
+            cls.classList.add('hidden');
+          }
+        });
+        
+        // Hide empty cells if day filter is applied
+        if (dayValue !== 'all') {
+          document.querySelectorAll('td[data-day]').forEach(cell => {
+            if (cell.getAttribute('data-day') !== dayValue) {
+              cell.classList.add('hidden');
+            } else {
+              cell.classList.remove('hidden');
+            }
+          });
+          
+          // Hide headers for other days
+          dayHeaders.forEach(header => {
+            if (header.getAttribute('data-day') !== dayValue) {
+              header.classList.add('hidden');
+            } else {
+              header.classList.remove('hidden');
+            }
+          });
+        } else {
+          // Show all cells and headers if no day filter
+          document.querySelectorAll('td[data-day]').forEach(cell => {
+            cell.classList.remove('hidden');
+          });
+          
+          dayHeaders.forEach(header => {
+            header.classList.remove('hidden');
+          });
+        }
+        
+        // Hide time slots if time filter is applied
+        if (timeValue !== 'all') {
+          timeSlots.forEach(slot => {
+            if (slot.getAttribute('data-time') !== timeValue) {
+              slot.closest('tr').classList.add('hidden');
+            } else {
+              slot.closest('tr').classList.remove('hidden');
+            }
+          });
+        } else {
+          // Show all time slots if no time filter
+          timeSlots.forEach(slot => {
+            slot.closest('tr').classList.remove('hidden');
+          });
+        }
+      }
+      
+      // Add event listeners for filter changes
+      subjectFilter.addEventListener('change', filterSchedule);
+      teacherFilter.addEventListener('change', filterSchedule);
+      dayFilter.addEventListener('change', filterSchedule);
+      timeFilter.addEventListener('change', filterSchedule);
+    });
+  </script>
+</body>
+</html>
