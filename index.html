@@ -714,38 +714,40 @@
     `;
   }
 }  
+
+  // اختبار اتصال Firestore
+  try {
+    const testDoc = await db.collection("testConnection").doc("test").get();
+    console.log("الاتصال بـ Firestore يعمل بشكل صحيح");
+  } catch (error) {
+    console.error("فشل الاتصال بـ Firestore:", error);
+  }
   // دالة لتحميل آراء العملاء من Firebase
   async function loadTestimonials() {
   try {
     const testimonialsContainer = document.getElementById('testimonialsContainer');
-    
-    // إضافة رسالة تحميل
-    testimonialsContainer.innerHTML = `
-      <div class="loading-spinner">
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-        <p>جاري تحميل آراء العملاء...</p>
-      </div>
-    `;
-    
+    testimonialsContainer.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin fa-3x"></i><p>جاري تحميل آراء العملاء...</p></div>';
+
     const querySnapshot = await db.collection("testimonials")
-      .orderBy("date", "desc")
-      .where("approved", "==", true) // فقط الآراء المعتمدة
+      .where("approved", "==", true)
       .orderBy("date", "desc")
       .limit(4)
       .get();
-    
+
     if (querySnapshot.empty) {
       testimonialsContainer.innerHTML = `
         <div class="error-msg" style="grid-column: 1/-1">
-          لا توجد آراء متاحة حالياً
+          لا توجد آراء عملاء معتمدة حالياً
         </div>
       `;
       return;
     }
-    
+
     let testimonialsHTML = '';
     querySnapshot.forEach(doc => {
       const t = doc.data();
+      const date = t.date?.toDate() || new Date(); // التحويل من Timestamp إلى Date
+      
       testimonialsHTML += `
         <div class="testimonial">
           <div class="testimonial-header">
@@ -762,11 +764,27 @@
           </div>
           <p>${t.text || 'تجربة رائعة مع المنصة'}</p>
           <p class="testimonial-date">
-            ${t.date?.toDate().toLocaleDateString('ar-EG') || ''}
+            ${date.toLocaleDateString('ar-EG', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
           </p>
         </div>
       `;
     });
+
+    testimonialsContainer.innerHTML = testimonialsHTML;
+
+  } catch (error) {
+    console.error("Error loading testimonials:", error);
+    testimonialsContainer.innerHTML = `
+      <div class="error-msg" style="grid-column: 1/-1">
+        حدث خطأ تقني: ${error.message || 'تعذر تحميل آراء العملاء'}
+      </div>
+    `;
+  }
+}
     
     testimonialsContainer.innerHTML = testimonialsHTML;
     
