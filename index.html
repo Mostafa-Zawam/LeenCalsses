@@ -659,7 +659,7 @@
       </div>
     `;
     
-    const querySnapshot = await db.collection("pricingPlans")
+    const querySnapshot = await db.collection("pricing")
       .where("active", "==", true)
       .orderBy("order")
       .get();
