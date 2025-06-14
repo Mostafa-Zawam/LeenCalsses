@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>الإعدادات الأولية</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <button id="createAdmin">إنشاء مستخدم إداري</button>
+  <div id="message"></div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDwBWoj-T6VXnPxeE9k_jYscynybxp6I1g",
+      authDomain: "leenclasses-2022.firebaseapp.com",
+      projectId: "leenclasses-2022",
+      storageBucket: "leenclasses-2022.appbasestorage.app",
+      messagingSenderId: "159615025935",
+      appId: "1:159615025935:web:ca599ce118c4ff260a747a",
+      measurementId: "G-4V4YHMBZME"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    document.getElementById('createAdmin').addEventListener('click', async () => {
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(
+          'admin@leenclasses.com',
+          'StrongPassword123'
+        );
+        
+        await db.collection('users').doc(userCredential.user.uid).set({
+          name: 'مدير النظام',
+          email: 'admin@leenclasses.com',
+          role: 'admin',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        document.getElementById('message').textContent = 'تم إنشاء المستخدم الإداري بنجاح';
+        console.log('Admin user created:', userCredential.user.uid);
+      } catch (error) {
+        document.getElementById('message').textContent = 'خطأ: ' + error.message;
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
