@@ -691,140 +691,66 @@
 
     // دالة لتحميل الباقات من Firebase
     async function loadPricingPlans() {
-      try {
-        const pricingContainer = document.getElementById('pricingContainer');
-        
-        pricingContainer.innerHTML = `
-          <div class="loading-spinner">
-            <i class="fas fa-spinner fa-spin fa-3x"></i>
-            <p>جاري تحميل الباقات...</p>
-          </div>
-        `;
-        
-        const querySnapshot = await db.collection("pricing")
-          .orderBy("order", "asc")
-          .where("active", "==", true)
-          .get();
-        
-        if (querySnapshot.empty) {
-          pricingContainer.innerHTML = `
-            <div class="error-msg" style="grid-column: 1/-1">
-              لا توجد باقات متاحة حالياً
-            </div>
-          `;
-          return;
-        }
-        
-        let plansHTML = '';
-        querySnapshot.forEach(doc => {
-          const plan = doc.data();
-          
-          plansHTML += `
-            <div class="pricing-table ${plan.popular ? 'popular' : ''}">
-              ${plan.popular ? '<div class="popular-tag">الأكثر شيوعاً</div>' : ''}
-              <div class="pricing-header">
-                <h3>${plan.name || 'باقة'}</h3>
-                <div class="price">
-                  ${plan.price || '0'} 
-                  <span>${plan.currency || 'ريال'}/شهر</span>
-                </div>
-                <p>${plan.description || 'باقة مميزة'}</p>
-              </div>
-              <div class="pricing-body">
-                <ul class="pricing-features">
-                  ${(plan.features || []).map(f => `
-                    <li ${f.disabled ? 'class="disabled"' : ''}>
-                      ${f.text || 'ميزة'}
-                    </li>
-                  `).join('')}
-                </ul>
-                <a href="#contact" class="cta">اشترك الآن</a>
-              </div>
-            </div>
-          `;
-        });
-        
-        pricingContainer.innerHTML = plansHTML;
-        
-      } catch (error) {
-        console.error("Error loading pricing plans:", error);
-        pricingContainer.innerHTML = `
-          <div class="error-msg" style="grid-column: 1/-1">
-            حدث خطأ في تحميل الباقات. يرجى تحديث الصفحة أو المحاولة لاحقاً
-          </div>
-        `;
+    const pricingContainer = document.getElementById('pricingContainer');
+    
+    try {
+      const querySnapshot = await db.collection("pricing")
+        .where("active", "==", true)
+        .get();
+
+      if (querySnapshot.empty) {
+        console.log("No active pricing plans found");
+        pricingContainer.innerHTML = `<p class="no-data">لا توجد باقات متاحة حالياً</p>`;
+        return;
       }
+
+      querySnapshot.forEach(doc => {
+        console.log("Pricing plan:", doc.id, doc.data()); // طباعة البيانات للتأكد
+      });
+
+      // ... rest of your code to display pricing plans
+
+    } catch (error) {
+      console.error("Detailed error loading pricing:", error);
+      pricingContainer.innerHTML = `
+        <div class="error-msg">
+          خطأ في تحميل الباقات: ${error.message}
+        </div>
+      `;
     }
+  }
 
     // دالة لتحميل آراء العملاء من Firebase
     async function loadTestimonials() {
-      try {
-        const testimonialsContainer = document.getElementById('testimonialsContainer');
-        
-        testimonialsContainer.innerHTML = `
-          <div class="loading-spinner">
-            <i class="fas fa-spinner fa-spin fa-3x"></i>
-            <p>جاري تحميل آراء العملاء...</p>
-          </div>
-        `;
+    const testimonialsContainer = document.getElementById('testimonialsContainer');
+    
+    try {
+      const querySnapshot = await db.collection("testimonials")
+        .where("approved", "==", true)
+        .limit(4)
+        .get();
 
-        const querySnapshot = await db.collection("testimonials")
-          .where("approved", "==", true)
-          .orderBy("date", "desc")
-          .limit(4)
-          .get();
-
-        if (querySnapshot.empty) {
-          testimonialsContainer.innerHTML = `
-            <div class="error-msg" style="grid-column: 1/-1">
-              لا توجد آراء عملاء معتمدة حالياً
-            </div>
-          `;
-          return;
-        }
-
-        let testimonialsHTML = '';
-        querySnapshot.forEach(doc => {
-          const t = doc.data();
-          const date = t.date?.toDate() || new Date();
-          
-          testimonialsHTML += `
-            <div class="testimonial">
-              <div class="testimonial-header">
-                <img src="${t.image || 'https://i.imgur.com/JQWUZgA.png'}" 
-                     alt="${t.name}" class="testimonial-img">
-                <div>
-                  <h4>${t.name}</h4>
-                  <p>${t.position || 'عميل LeenClasses'}</p>
-                </div>
-              </div>
-              <div class="testimonial-rating">
-                ${'<i class="fas fa-star"></i>'.repeat(t.rating || 5)}
-                ${'<i class="far fa-star"></i>'.repeat(5 - (t.rating || 5))}
-              </div>
-              <p>${t.text || 'تجربة رائعة مع المنصة'}</p>
-              <p class="testimonial-date">
-                ${date.toLocaleDateString('ar-EG', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
-              </p>
-            </div>
-          `;
-        });
-
-        testimonialsContainer.innerHTML = testimonialsHTML;
-
-      } catch (error) {
-        console.error("Error loading testimonials:", error);
-        testimonialsContainer.innerHTML = `
-          <div class="error-msg" style="grid-column: 1/-1">
-            حدث خطأ في تحميل آراء العملاء. يرجى تحديث الصفحة أو المحاولة لاحقاً
-          </div>
-        `;
+      if (querySnapshot.empty) {
+        console.log("No approved testimonials found");
+        testimonialsContainer.innerHTML = `<p class="no-data">لا توجد آراء عملاء معتمدة</p>`;
+        return;
       }
+
+      querySnapshot.forEach(doc => {
+        console.log("Testimonial:", doc.id, doc.data()); // طباعة البيانات للتأكد
+      });
+
+      // ... rest of your code to display testimonials
+
+    } catch (error) {
+      console.error("Detailed error loading testimonials:", error);
+      testimonialsContainer.innerHTML = `
+        <div class="error-msg">
+          خطأ في تحميل آراء العملاء: ${error.message}
+        </div>
+      `;
     }
+  }
 
     // دالة لإعداد نموذج الاتصال
     function setupContactForm() {
