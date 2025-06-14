@@ -638,8 +638,33 @@
   </div>
   
   <footer>
-    <!-- تذييل الصفحة كما هو -->
-    <!-- ... -->
+    <div class="container">
+      <div style="margin-bottom: 30px;">
+        <h2 style="color: white; border: none;">LeenClasses</h2>
+        <p>منصتك التعليمية المتكاملة لإدارة التدريس عبر الإنترنت</p>
+      </div>
+      
+      <div class="footer-links">
+        <a href="#">الصفحة الرئيسية</a>
+        <a href="#">المميزات</a>
+        <a href="#">الباقات</a>
+        <a href="#">تواصل معنا</a>
+        <a href="#">شروط الاستخدام</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+      
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+      
+      <div style="margin-top: 30px; color: #bdc3c7; font-size: 0.9rem;">
+        <p>© 2023 LeenClasses. جميع الحقوق محفوظة</p>
+      </div>
+    </div>
   </footer>
 
   <!-- Firebase SDK -->
@@ -648,231 +673,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 
   <script>
-  async function loadPricingPlans() {
-  try {
-    const pricingContainer = document.getElementById('pricingContainer');
-    
-    pricingContainer.innerHTML = `
-      <div class="loading-spinner">
-        <i class="fas fa-spinner fa-spin fa-3x"></i>
-        <p>جاري تحميل الباقات...</p>
-      </div>
-    `;
-    
-    const querySnapshot = await db.collection("pricing")
-      .orderBy("order", "asc")
-      .where("active", "==", true)
-      .orderBy("order")
-      .get();
-    
-    if (querySnapshot.empty) {
-      pricingContainer.innerHTML = `
-        <div class="error-msg" style="grid-column: 1/-1">
-          لا توجد باقات متاحة حالياً
-        </div>
-      `;
-      return;
-    }
-    
-    let plansHTML = '';
-    querySnapshot.forEach(doc => {
-      const plan = doc.data();
-      
-      plansHTML += `
-        <div class="pricing-table ${plan.popular ? 'popular' : ''}">
-          ${plan.popular ? '<div class="popular-tag">الأكثر شيوعاً</div>' : ''}
-          <div class="pricing-header">
-            <h3>${plan.name || 'باقة'}</h3>
-            <div class="price">
-              ${plan.price || '0'} 
-              <span>${plan.currency || 'ريال'}/شهر</span>
-            </div>
-            <p>${plan.description || 'باقة مميزة'}</p>
-          </div>
-          <div class="pricing-body">
-            <ul class="pricing-features">
-              ${(plan.features || []).map(f => `
-                <li ${f.disabled ? 'class="disabled"' : ''}>
-                  ${f.text || 'ميزة'}
-                </li>
-              `).join('')}
-            </ul>
-            <a href="#contact" class="cta">اشترك الآن</a>
-          </div>
-        </div>
-      `;
-    });
-    
-    pricingContainer.innerHTML = plansHTML;
-    
-  } catch (error) {
-    console.error("Error loading pricing plans:", error);
-    pricingContainer.innerHTML = `
-      <div class="error-msg" style="grid-column: 1/-1">
-        حدث خطأ في تحميل الباقات. يرجى تحديث الصفحة أو المحاولة لاحقاً
-      </div>
-    `;
-  }
-}  
-
-  // اختبار اتصال Firestore
-  try {
-    const testDoc = await db.collection("testConnection").doc("test").get();
-    console.log("الاتصال بـ Firestore يعمل بشكل صحيح");
-  } catch (error) {
-    console.error("فشل الاتصال بـ Firestore:", error);
-  }
-  // دالة لتحميل آراء العملاء من Firebase
-  async function loadTestimonials() {
-  try {
-    const testimonialsContainer = document.getElementById('testimonialsContainer');
-    testimonialsContainer.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin fa-3x"></i><p>جاري تحميل آراء العملاء...</p></div>';
-
-    const querySnapshot = await db.collection("testimonials")
-      .where("approved", "==", true)
-      .orderBy("date", "desc")
-      .limit(4)
-      .get();
-
-    if (querySnapshot.empty) {
-      testimonialsContainer.innerHTML = `
-        <div class="error-msg" style="grid-column: 1/-1">
-          لا توجد آراء عملاء معتمدة حالياً
-        </div>
-      `;
-      return;
-    }
-
-    let testimonialsHTML = '';
-    querySnapshot.forEach(doc => {
-      const t = doc.data();
-      const date = t.date?.toDate() || new Date(); // التحويل من Timestamp إلى Date
-      
-      testimonialsHTML += `
-        <div class="testimonial">
-          <div class="testimonial-header">
-            <img src="${t.image || 'https://i.imgur.com/JQWUZgA.png'}" 
-                 alt="${t.name}" class="testimonial-img">
-            <div>
-              <h4>${t.name}</h4>
-              <p>${t.position || 'عميل LeenClasses'}</p>
-            </div>
-          </div>
-          <div class="testimonial-rating">
-            ${'<i class="fas fa-star"></i>'.repeat(t.rating || 5)}
-            ${'<i class="far fa-star"></i>'.repeat(5 - (t.rating || 5))}
-          </div>
-          <p>${t.text || 'تجربة رائعة مع المنصة'}</p>
-          <p class="testimonial-date">
-            ${date.toLocaleDateString('ar-EG', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </p>
-        </div>
-      `;
-    });
-
-    testimonialsContainer.innerHTML = testimonialsHTML;
-
-  } catch (error) {
-    console.error("Error loading testimonials:", error);
-    testimonialsContainer.innerHTML = `
-      <div class="error-msg" style="grid-column: 1/-1">
-        حدث خطأ تقني: ${error.message || 'تعذر تحميل آراء العملاء'}
-      </div>
-    `;
-  }
-}
-    
-    testimonialsContainer.innerHTML = testimonialsHTML;
-    
-  } catch (error) {
-    console.error("Error loading testimonials:", error);
-    testimonialsContainer.innerHTML = `
-      <div class="error-msg" style="grid-column: 1/-1">
-        حدث خطأ في تحميل آراء العملاء. يرجى تحديث الصفحة أو المحاولة لاحقاً
-      </div>
-    `;
-  }
-}
-
-  // دالة لإعداد نموذج الاتصال
-  function setupContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const formData = {
-        fullName: document.getElementById('fullName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone: document.getElementById('phone').value.trim(),
-        organization: document.getElementById('organization').value.trim(),
-        studentsCount: document.getElementById('studentsCount').value,
-        plan: document.getElementById('plan').value,
-        notes: document.getElementById('notes').value.trim(),
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      };
-      
-      const submitBtn = contactForm.querySelector('.submit-btn');
-      
-      try {
-        // التحقق من صحة المدخلات
-        if (!formData.fullName || !formData.email || !formData.phone) {
-          throw new Error('الرجاء ملء جميع الحقول المطلوبة');
-        }
-        
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-          throw new Error('صيغة البريد الإلكتروني غير صالحة');
-        }
-        
-        // تعطيل الزر أثناء المعالجة
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
-        
-        // حفظ البيانات في Firebase
-        await db.collection("contactRequests").add(formData);
-        
-        // إعادة تعيين النموذج
-        contactForm.reset();
-        alert('تم إرسال طلبك بنجاح! سنتواصل معك قريباً.');
-        
-      } catch (error) {
-        console.error('Error submitting contact form:', error);
-        alert(error.message || 'حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة مرة أخرى.');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'إرسال الطلب';
-      }
-    });
-  }
-
-  // دالة لإعداد الأسئلة الشائعة
-  function setupFAQ() {
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-      const question = item.querySelector('.faq-question');
-      
-      question.addEventListener('click', () => {
-        // إغلاق جميع العناصر الأخرى
-        faqItems.forEach(otherItem => {
-          if (otherItem !== item && otherItem.classList.contains('active')) {
-            otherItem.classList.remove('active');
-            otherItem.querySelector('.faq-question i').className = 'fas fa-chevron-down';
-          }
-        });
-        
-        // تبديل العنصر الحالي
-        item.classList.toggle('active');
-        const icon = question.querySelector('i');
-        icon.className = item.classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
-      });
-    });
-  }
-
     // التهيئة باستخدام بياناتك
     const firebaseConfig = {
       apiKey: "AIzaSyDwBWoj-T6VXnPxeE9k_jYscynybxp6I1g",
@@ -888,15 +688,228 @@
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
-    // التحقق من حالة تسجيل الدخول
-    auth.onAuthStateChanged((user) => {
-      if (user && user.emailVerified) {
-        window.location.href = `dashboard.html?uid=${user.uid}`;
+
+    // دالة لتحميل الباقات من Firebase
+    async function loadPricingPlans() {
+      try {
+        const pricingContainer = document.getElementById('pricingContainer');
+        
+        pricingContainer.innerHTML = `
+          <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p>جاري تحميل الباقات...</p>
+          </div>
+        `;
+        
+        const querySnapshot = await db.collection("pricing")
+          .orderBy("order", "asc")
+          .where("active", "==", true)
+          .get();
+        
+        if (querySnapshot.empty) {
+          pricingContainer.innerHTML = `
+            <div class="error-msg" style="grid-column: 1/-1">
+              لا توجد باقات متاحة حالياً
+            </div>
+          `;
+          return;
+        }
+        
+        let plansHTML = '';
+        querySnapshot.forEach(doc => {
+          const plan = doc.data();
+          
+          plansHTML += `
+            <div class="pricing-table ${plan.popular ? 'popular' : ''}">
+              ${plan.popular ? '<div class="popular-tag">الأكثر شيوعاً</div>' : ''}
+              <div class="pricing-header">
+                <h3>${plan.name || 'باقة'}</h3>
+                <div class="price">
+                  ${plan.price || '0'} 
+                  <span>${plan.currency || 'ريال'}/شهر</span>
+                </div>
+                <p>${plan.description || 'باقة مميزة'}</p>
+              </div>
+              <div class="pricing-body">
+                <ul class="pricing-features">
+                  ${(plan.features || []).map(f => `
+                    <li ${f.disabled ? 'class="disabled"' : ''}>
+                      ${f.text || 'ميزة'}
+                    </li>
+                  `).join('')}
+                </ul>
+                <a href="#contact" class="cta">اشترك الآن</a>
+              </div>
+            </div>
+          `;
+        });
+        
+        pricingContainer.innerHTML = plansHTML;
+        
+      } catch (error) {
+        console.error("Error loading pricing plans:", error);
+        pricingContainer.innerHTML = `
+          <div class="error-msg" style="grid-column: 1/-1">
+            حدث خطأ في تحميل الباقات. يرجى تحديث الصفحة أو المحاولة لاحقاً
+          </div>
+        `;
       }
-    });
+    }
+
+    // دالة لتحميل آراء العملاء من Firebase
+    async function loadTestimonials() {
+      try {
+        const testimonialsContainer = document.getElementById('testimonialsContainer');
+        
+        testimonialsContainer.innerHTML = `
+          <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin fa-3x"></i>
+            <p>جاري تحميل آراء العملاء...</p>
+          </div>
+        `;
+
+        const querySnapshot = await db.collection("testimonials")
+          .where("approved", "==", true)
+          .orderBy("date", "desc")
+          .limit(4)
+          .get();
+
+        if (querySnapshot.empty) {
+          testimonialsContainer.innerHTML = `
+            <div class="error-msg" style="grid-column: 1/-1">
+              لا توجد آراء عملاء معتمدة حالياً
+            </div>
+          `;
+          return;
+        }
+
+        let testimonialsHTML = '';
+        querySnapshot.forEach(doc => {
+          const t = doc.data();
+          const date = t.date?.toDate() || new Date();
+          
+          testimonialsHTML += `
+            <div class="testimonial">
+              <div class="testimonial-header">
+                <img src="${t.image || 'https://i.imgur.com/JQWUZgA.png'}" 
+                     alt="${t.name}" class="testimonial-img">
+                <div>
+                  <h4>${t.name}</h4>
+                  <p>${t.position || 'عميل LeenClasses'}</p>
+                </div>
+              </div>
+              <div class="testimonial-rating">
+                ${'<i class="fas fa-star"></i>'.repeat(t.rating || 5)}
+                ${'<i class="far fa-star"></i>'.repeat(5 - (t.rating || 5))}
+              </div>
+              <p>${t.text || 'تجربة رائعة مع المنصة'}</p>
+              <p class="testimonial-date">
+                ${date.toLocaleDateString('ar-EG', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
+            </div>
+          `;
+        });
+
+        testimonialsContainer.innerHTML = testimonialsHTML;
+
+      } catch (error) {
+        console.error("Error loading testimonials:", error);
+        testimonialsContainer.innerHTML = `
+          <div class="error-msg" style="grid-column: 1/-1">
+            حدث خطأ في تحميل آراء العملاء. يرجى تحديث الصفحة أو المحاولة لاحقاً
+          </div>
+        `;
+      }
+    }
+
+    // دالة لإعداد نموذج الاتصال
+    function setupContactForm() {
+      const contactForm = document.getElementById('contactForm');
+      
+      if (!contactForm) return;
+      
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = {
+          fullName: document.getElementById('fullName').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          organization: document.getElementById('organization').value.trim(),
+          studentsCount: document.getElementById('studentsCount').value,
+          plan: document.getElementById('plan').value,
+          notes: document.getElementById('notes').value.trim(),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        
+        try {
+          // التحقق من صحة المدخلات
+          if (!formData.fullName || !formData.email || !formData.phone) {
+            throw new Error('الرجاء ملء جميع الحقول المطلوبة');
+          }
+          
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            throw new Error('صيغة البريد الإلكتروني غير صالحة');
+          }
+          
+          // تعطيل الزر أثناء المعالجة
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+          
+          // حفظ البيانات في Firebase
+          await db.collection("contactRequests").add(formData);
+          
+          // إعادة تعيين النموذج
+          contactForm.reset();
+          alert('تم إرسال طلبك بنجاح! سنتواصل معك قريباً.');
+          
+        } catch (error) {
+          console.error('Error submitting contact form:', error);
+          alert(error.message || 'حدث خطأ أثناء إرسال الطلب. الرجاء المحاولة مرة أخرى.');
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'إرسال الطلب';
+        }
+      });
+    }
+
+    // دالة لإعداد الأسئلة الشائعة
+    function setupFAQ() {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      if (!faqItems.length) return;
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+          // إغلاق جميع العناصر الأخرى
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item && otherItem.classList.contains('active')) {
+              otherItem.classList.remove('active');
+              otherItem.querySelector('.faq-question i').className = 'fas fa-chevron-down';
+            }
+          });
+          
+          // تبديل العنصر الحالي
+          item.classList.toggle('active');
+          const icon = question.querySelector('i');
+          icon.className = item.classList.contains('active') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+        });
+      });
+    }
+
     // دالة تسجيل الدخول المحسنة
     function setupLoginForm() {
       const loginForm = document.getElementById('loginForm');
+      if (!loginForm) return;
+
       const forgotPassword = document.getElementById('forgotPassword');
       const signupLink = document.getElementById('signupLink');
       
@@ -929,13 +942,6 @@
           const userCredential = await auth.signInWithEmailAndPassword(email, password);
           const user = userCredential.user;
           
-          // التحقق إذا كان البريد الإلكتروني مفعل
-          // تم تعطيل التحقق من البريد الإلكتروني للاختبار
-          if (!user.emailVerified && email !== "admin@leenclasses.com") {
-            await auth.signOut();
-            throw new Error('الرجاء تفعيل حسابك من الرابط المرسل إلى بريدك الإلكتروني');
-          }
-          
           // توجيه المستخدم إلى لوحة التحكم
           window.location.href = `dashboard.html?uid=${user.uid}`;
           
@@ -958,55 +964,58 @@
           }
           
           alert(errorMessage);
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'دخول';
-        }
-      });
-      
-      // إعادة تعيين كلمة المرور
-      forgotPassword.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const email = prompt('الرجاء إدخال بريدك الإلكتروني لإرسال رابط إعادة التعيين:');
-        
-        if (email) {
-          try {
-            await auth.sendPasswordResetEmail(email);
-            alert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني');
-          } catch (error) {
-            alert('حدث خطأ: ' + (error.message || 'تعذر إرسال رابط التعيين'));
+        } finally {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'دخول';
           }
         }
       });
       
+      // إعادة تعيين كلمة المرور
+      if (forgotPassword) {
+        forgotPassword.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const email = prompt('الرجاء إدخال بريدك الإلكتروني لإرسال رابط إعادة التعيين:');
+          
+          if (email) {
+            try {
+              await auth.sendPasswordResetEmail(email);
+              alert('تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني');
+            } catch (error) {
+              alert('حدث خطأ: ' + (error.message || 'تعذر إرسال رابط التعيين'));
+            }
+          }
+        });
+      }
+      
       // رابط التسجيل الجديد
-      signupLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('سيتم توجيهك إلى صفحة التسجيل قريباً');
-        // window.location.href = 'signup.html';
-      });
+      if (signupLink) {
+        signupLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          alert('سيتم توجيهك إلى صفحة التسجيل قريباً');
+          // window.location.href = 'signup.html';
+        });
+      }
     }
 
-    // باقي الدوال كما هي (loadPricingPlans, loadTestimonials, etc.)
-    // ... [كل الدوال الأخرى تبقى كما هي بدون تغيير] ...
+    // التحقق من حالة تسجيل الدخول
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = `dashboard.html?uid=${user.uid}`;
+      }
+    });
 
     // تهيئة الصفحة عند التحميل
     document.addEventListener('DOMContentLoaded', async () => {
       console.log('جاري تحميل البيانات...');
       
       try {
-        // التحقق من حالة تسجيل الدخول
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            // يمكنك توجيه المستخدم المسجل دخوله مباشرة إذا أردت
-            // window.location.href = 'dashboard.html';
-          }
-        });
-        
         await loadPricingPlans();
         await loadTestimonials();
         setupContactForm();
         setupFAQ();
-        setupLoginForm(); // <-- الدالة الجديدة
+        setupLoginForm();
         
         console.log('تم تحميل جميع البيانات بنجاح');
       } catch (error) {
