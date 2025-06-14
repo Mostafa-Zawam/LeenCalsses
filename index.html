@@ -998,11 +998,15 @@
         });
       }
     }
-
-    // التحقق من حالة تسجيل الدخول
+    // التحقق من حالة تسجيل الدخول مع استثناء لصفحة index
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        window.location.href = `dashboard.html?uid=${user.uid}`;
+      // إذا كان المستخدم مسجل الدخول وكان في صفحة index
+      if (user && window.location.pathname.endsWith('index.html')) {
+        // عرض خيار للمستخدم بدلاً من إعادة التوجيه التلقائي
+        const confirmRedirect = confirm('أنت مسجل الدخول بالفعل. هل تريد الانتقال إلى لوحة التحكم؟');
+        if (confirmRedirect) {
+          window.location.href = `dashboard.html?uid=${user.uid}`;
+        }
       }
     });
 
